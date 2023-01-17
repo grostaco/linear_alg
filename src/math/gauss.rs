@@ -12,8 +12,8 @@ use super::Mat2d;
 
 #[derive(Debug)]
 pub enum Step<T> {
-    Swap(usize, usize),
-    Sub(T, usize, usize),
+    Swap { from: usize, to: usize },
+    Sub { scale: T, from: usize, to: usize },
 }
 
 pub struct GaussElimIter<T, const M: usize, const N: usize> {
@@ -52,7 +52,13 @@ where
                 // There exists a non-zero pivot in the ith column
                 if let Some(idx) = self.mat.iter().position(|x| !T::zero().eq(&x[self.col])) {
                     self.mat.swap_row(self.col, idx);
-                    return Some((Step::Swap(self.col, idx), self.mat.clone()));
+                    return Some((
+                        Step::Swap {
+                            from: self.col,
+                            to: idx,
+                        },
+                        self.mat.clone(),
+                    ));
                 } else {
                     self.col += 1;
                 }
@@ -62,7 +68,14 @@ where
                 if self.mat[self.row][self.col] != T::zero() {
                     let scale = self.mat[self.row][self.col] / self.mat[self.col][self.col];
                     self.mat[self.row] = self.mat[self.row].sub(&self.mat[self.col].mul(scale));
-                    return Some((Step::Sub(scale, self.col, self.row), self.mat.clone()));
+                    return Some((
+                        Step::Sub {
+                            scale,
+                            from: self.col,
+                            to: self.row,
+                        },
+                        self.mat.clone(),
+                    ));
                 }
 
                 self.row += 1;
