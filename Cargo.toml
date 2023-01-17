@@ -1,0 +1,10 @@
+[package]
+name = "linear_alg"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+yew = "0.20.0"
+yew-hooks = "0.2.0"
