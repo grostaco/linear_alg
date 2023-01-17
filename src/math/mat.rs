@@ -66,7 +66,7 @@ impl<T: Copy, const M: usize, const N: usize> Mat2d<T, M, N> {
             // find a non-zero pivot
             if mat[i][i] == T::zero() {
                 // There exists a non-zero pivot in the ith column
-                if let Some(idx) = mat.iter().position(|x| T::zero().eq(&x[i])) {
+                if let Some(idx) = mat.iter().position(|x| !T::zero().eq(&x[i])) {
                     mat.swap_row(i, idx);
                 } else {
                     continue;
