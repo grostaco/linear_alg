@@ -20,6 +20,15 @@ pub struct GaussElimIter<T, const M: usize, const N: usize> {
     mat: Mat2d<T, M, N>,
     col: usize,
     row: usize,
+    m: usize,
+    n: usize,
+}
+
+impl<T, const M: usize, const N: usize> GaussElimIter<T, M, N> {
+    pub fn bound(&mut self, m: usize, n: usize) {
+        self.m = m;
+        self.n = n;
+    }
 }
 
 impl<T, const M: usize, const N: usize> From<Mat2d<T, M, N>> for GaussElimIter<T, M, N> {
@@ -28,6 +37,8 @@ impl<T, const M: usize, const N: usize> From<Mat2d<T, M, N>> for GaussElimIter<T
             mat,
             col: 0,
             row: 1,
+            m: M,
+            n: N,
         }
     }
 }
@@ -43,8 +54,11 @@ where
 {
     type Item = (Step<T>, Mat2d<T, M, N>);
     fn next(&mut self) -> Option<Self::Item> {
+        let m = M.min(self.m);
+        let n = N.min(self.n);
+
         loop {
-            if self.col == M.min(N) || self.row >= M.min(N) {
+            if self.col == m.min(n) || self.row >= m.min(n) {
                 return None;
             }
 
@@ -79,7 +93,7 @@ where
                 }
 
                 self.row += 1;
-                if self.row == N {
+                if self.row == n {
                     self.col += 1;
                     self.row = self.col + 1;
                     break;
