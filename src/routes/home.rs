@@ -11,7 +11,7 @@ pub fn home() -> Html {
         <>
         <Nav />
 
-        <Mat::<f64, 2, 2> mat={Mat2d::zeros()}/>
+        <Mat::<f64, 13, 13> mat={Mat2d::zeros()} m=4 n=3/>
         </>
     }
 }

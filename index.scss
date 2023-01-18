@@ -10,6 +10,30 @@ body {
     font-family: 'Wotfard', -apple-system, 'Segoe UI', 'Roboto', 'Ubuntu', 'Cantarell', 'Noto Sans', sans-serif, 'BlinkMacSystemFont', 'Helvetica Neue', 'Arial', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+.math {
+    font-family: Symbola-mq, "Times New Roman", serif;
+}
+
+table.matrix {
+    display: inline-table;
+    vertical-align: middle;
+    border-spacing: 1em .2em;
+    margin: 0 -.8em;
+    border-collapse: separate;
+    max-width: none !important;
+    color: white;
+    font-size: 20px;
+}
+
+.paren {
+    padding: 0 .1em;
+    vertical-align: bottom;
+    transform-origin: bottom;
+    display: inline-block;
+    color: white;
+    white-space: pre-wrap;
+}
+
 .text-edit {
     display: flex;
     flex: 1;
