@@ -370,7 +370,12 @@ checksum = "201de327520df007757c1f0adce6e827fe8562fbc28bfd9c15571c66ca1f5f79"
 name = "linear_alg"
 version = "0.1.0"
 dependencies = [
+ "gloo",
+ "gloo-utils",
+ "js-sys",
  "num-traits",
+ "wasm-bindgen",
+ "web-sys",
  "yew",
  "yew-hooks",
  "yew-router",

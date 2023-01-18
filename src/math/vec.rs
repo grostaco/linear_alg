@@ -6,7 +6,7 @@ use std::{
 
 use num_traits::identities;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Vec<T, const N: usize> {
     vec: [T; N],
 }

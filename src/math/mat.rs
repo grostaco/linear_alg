@@ -7,7 +7,7 @@ use std::{
 
 use num_traits::identities;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub struct Mat2d<T, const M: usize, const N: usize> {
     mat: [vec::Vec<T, M>; N],
 }
