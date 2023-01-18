@@ -1,4 +1,4 @@
-mod gauss;
+pub mod gauss;
 mod mat;
 pub mod vec;
 
