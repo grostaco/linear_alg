@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display};
 
 use num_traits::{Float, FromPrimitive};
-use yew::{function_component, html, Html, Properties};
+use yew::{function_component, html, virtual_dom::VNode, Html, Properties};
 
 use crate::{
     components::Mat,
@@ -29,7 +29,9 @@ where
     let (m, n) = (props.m, props.n);
     iter.bound(m, n);
 
-    let equations = gloo_utils::document().create_ele
+    let equations = gloo_utils::document()
+        .create_element_ns(Some("http://www.w3.org/1998/Math/MathML"), "math")
+        .unwrap();
 
     html! {
         <div class="dflex dflex-col dflex-gap-lg" style="margin-top: 2em;">
@@ -46,6 +48,7 @@ where
             } )}
 
             <p style="color: white">{"Solutions"}</p>
+            {VNode::VRef(equations.into())}
         </div>
     }
 }

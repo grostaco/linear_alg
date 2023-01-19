@@ -660,11 +660,11 @@ function getImports() {
         const ret = makeMutClosure(arg0, arg1, 142, __wbg_adapter_19);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper6113 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper6118 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 498, __wbg_adapter_22);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper6165 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper6170 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 521, __wbg_adapter_25);
         return addHeapObject(ret);
     };
@@ -703,7 +703,7 @@ function initSync(module) {
 
 async function init(input) {
     if (typeof input === 'undefined') {
-        input = new URL('linear_alg-783e1ccea97e0a61_bg.wasm', import.meta.url);
+        input = new URL('linear_alg-17e6416109875cb3_bg.wasm', import.meta.url);
     }
     const imports = getImports();
 

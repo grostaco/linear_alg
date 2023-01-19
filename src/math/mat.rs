@@ -5,7 +5,7 @@ use std::{
     slice,
 };
 
-use num_traits::identities;
+use num_traits::{identities, Float};
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Mat2d<T, const M: usize, const N: usize> {
@@ -54,12 +54,7 @@ impl<T: Copy, const M: usize, const N: usize> Mat2d<T, M, N> {
 
     pub fn row_reduced(&self) -> Self
     where
-        T: identities::Zero
-            + PartialEq
-            + Div<T, Output = T>
-            + Mul<T, Output = T>
-            + Sub<T, Output = T>
-            + Copy,
+        T: Float,
     {
         let mut mat = self.clone();
         for i in 0..M.min(N) {
@@ -72,10 +67,30 @@ impl<T: Copy, const M: usize, const N: usize> Mat2d<T, M, N> {
                     continue;
                 }
             }
-            for j in i + 1..N {
+            for j in i + 1..M {
                 if mat[j][i] != T::zero() {
                     let scale = mat[j][i] / mat[i][i];
                     mat[j] = mat[j].sub(&mat[i].mul(scale));
+                }
+            }
+        }
+
+        mat
+    }
+
+    pub fn rref(&self) -> Self
+    where
+        T: Float,
+    {
+        let mut mat = self.row_reduced();
+
+        for i in N..0 {
+            if let Some(idx) = mat.iter().map(|x| x[i]).position(|x| !x.eq(&T::zero())) {
+                for j in idx - 1..0 {
+                    if mat[i][j] != T::zero() {
+                        let scale = mat[i][j] / mat[i][idx];
+                        mat[j] = mat[j].sub(&mat[idx].mul(scale));
+                    }
                 }
             }
         }
