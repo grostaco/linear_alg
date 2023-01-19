@@ -25,6 +25,7 @@ pub fn steps<T, const M: usize, const N: usize>(props: &Props<T, M, N>) -> Html
 where
     T: PartialEq + Copy + Float + Display + FromPrimitive + 'static + Debug,
 {
+    let rref = props.mat.rref();
     let mut iter = GaussElimIter::from(props.mat);
     let (m, n) = (props.m, props.n);
     iter.bound(m, n);
@@ -48,6 +49,7 @@ where
             } )}
 
             <p style="color: white">{"Solutions"}</p>
+            <Mat::<T, M, N> {m} {n} mat={rref}/>
             {VNode::VRef(equations.into())}
         </div>
     }
