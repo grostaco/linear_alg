@@ -1,7 +1,7 @@
 use super::vec;
 use std::{
     fmt::Debug,
-    ops::{Div, Index, IndexMut, Mul, Sub},
+    ops::{Index, IndexMut, Mul, Sub},
     slice,
 };
 

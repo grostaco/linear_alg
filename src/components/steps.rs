@@ -38,7 +38,7 @@ where
         <div class="dflex dflex-col dflex-gap-lg" style="margin-top: 2em;">
             {for iter.map(|(step, mat)| html! {
                 <div class="dflex dflex-justify-center dflex-gap-md">
-                    <Mat::<T, M, N> {m} {n} {mat}/>
+                    //<Mat::<T, M, N> {m} {n} {mat}/>
                     <span>{
                         match step {
                             Step::Swap{from, to} => format!("Swap row {from} with row {to}"),
@@ -48,7 +48,7 @@ where
                 </div>
             } )}
 
-            <p style="color: white">{"Solutions"}</p>
+            <p style="color: white">{"Solutions1"}</p>
             <Mat::<T, M, N> {m} {n} mat={rref}/>
             {VNode::VRef(equations.into())}
         </div>
