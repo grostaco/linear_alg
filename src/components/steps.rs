@@ -29,6 +29,8 @@ where
     let (m, n) = (props.m, props.n);
     iter.bound(m, n);
 
+    let equations = gloo_utils::document().create_ele
+
     html! {
         <div class="dflex dflex-col dflex-gap-lg" style="margin-top: 2em;">
             {for iter.map(|(step, mat)| html! {
@@ -42,6 +44,8 @@ where
                     }</span>
                 </div>
             } )}
+
+            <p style="color: white">{"Solutions"}</p>
         </div>
     }
 }

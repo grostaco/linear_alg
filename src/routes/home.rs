@@ -33,6 +33,7 @@ pub fn home() -> Html {
             </div>
 
             <Steps::<f64, 64, 64> mat={*mat} {m} {n}/>
+
         </main>
         </>
     }
