@@ -67,7 +67,7 @@ impl<T: Copy, const M: usize, const N: usize> Mat2d<T, M, N> {
                     continue;
                 }
             }
-            for j in i + 1..M {
+            for j in i + 1..N {
                 if mat[j][i] != T::zero() {
                     let scale = mat[j][i] / mat[i][i];
                     mat[j] = mat[j].sub(&mat[i].mul(scale));
