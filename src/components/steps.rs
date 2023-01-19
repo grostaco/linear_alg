@@ -5,30 +5,24 @@ use yew::{function_component, html, virtual_dom::VNode, Html, Properties};
 
 use crate::{
     components::Mat,
-    math::{gauss::Step, GaussElimIter, Mat2d},
+    math::{mat::Step, Mat2d},
 };
 
 #[derive(Properties, PartialEq)]
-pub struct Props<T, const M: usize, const N: usize>
+pub struct Props<T>
 where
     T: PartialEq,
 {
-    pub mat: Mat2d<T, M, N>,
-    #[prop_or(M)]
-    pub m: usize,
-    #[prop_or(N)]
-    pub n: usize,
+    pub mat: Mat2d<T>,
 }
 
 #[function_component(Steps)]
-pub fn steps<T, const M: usize, const N: usize>(props: &Props<T, M, N>) -> Html
+pub fn steps<T>(props: &Props<T>) -> Html
 where
     T: PartialEq + Copy + Float + Display + FromPrimitive + 'static + Debug,
 {
     let rref = props.mat.rref();
-    let mut iter = GaussElimIter::from(props.mat);
-    let (m, n) = (props.m, props.n);
-    iter.bound(m, n);
+    let steps = props.mat.row_reduced_verbose();
 
     let equations = gloo_utils::document()
         .create_element_ns(Some("http://www.w3.org/1998/Math/MathML"), "math")
@@ -36,9 +30,9 @@ where
 
     html! {
         <div class="dflex dflex-col dflex-gap-lg" style="margin-top: 2em;">
-            {for iter.map(|(step, mat)| html! {
+            {for steps.into_iter().map(|(mat, step)| html! {
                 <div class="dflex dflex-justify-center dflex-gap-md">
-                    //<Mat::<T, M, N> {m} {n} {mat}/>
+                    <Mat::<T> {mat}/>
                     <span>{
                         match step {
                             Step::Swap{from, to} => format!("Swap row {from} with row {to}"),
@@ -48,8 +42,11 @@ where
                 </div>
             } )}
 
-            <p style="color: white">{"Solutions1"}</p>
-            <Mat::<T, M, N> {m} {n} mat={rref}/>
+
+            <h1>{"RREF matrix"}</h1>
+            <div class="dflex dflex-row dflex-justify-center dflex-gap-md">
+                <Mat::<T> mat={rref}/>
+            </div>
             {VNode::VRef(equations.into())}
         </div>
     }

@@ -6,7 +6,7 @@ pub fn nav() -> Html {
         <>
         <nav class="navbar dflex-justify-center">
             <div class="dflex dflex-col">
-                <div class="bold font-lg">{{"Linear Algebra Solver"}}</div>
+                <div class="bold font-lg">{{"Linear Algebra Calculator"}}</div>
                 <div>{{"Made with Rust!"}}</div>
             </div>
             <div class="dflex dflex-row dflex-gap-md">

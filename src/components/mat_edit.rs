@@ -12,21 +12,16 @@ use yew_hooks::use_effect_once;
 use crate::math::Mat2d;
 
 #[derive(Properties, PartialEq)]
-pub struct Props<T, const M: usize, const N: usize>
+pub struct Props<T>
 where
     T: PartialEq + identities::Zero + Copy,
 {
-    #[prop_or(Mat2d::zeros())]
-    pub mat: Mat2d<T, M, N>,
-    #[prop_or(M)]
-    pub m: usize,
-    #[prop_or(N)]
-    pub n: usize,
-
-    pub onchange: Callback<Mat2d<T, M, N>, ()>,
+    pub mat: Mat2d<T>,
+    pub onchange: Callback<Mat2d<T>, ()>,
 }
+
 #[function_component(MatEdit)]
-pub fn mat_edit<T, const M: usize, const N: usize>(props: &Props<T, M, N>) -> Html
+pub fn mat_edit<T>(props: &Props<T>) -> Html
 where
     T: Float + Display + 'static + FromPrimitive + ToPrimitive,
 {
@@ -44,6 +39,7 @@ where
     let key = use_state(Option::default);
 
     let clear_target = use_state(bool::default);
+    let nodes = use_state(Vec::<Vec<Element>>::default);
 
     let onclick = {
         let target_handle = target.clone();
@@ -68,6 +64,32 @@ where
             target_handle.set(Some(element));
         })
     };
+
+    {
+        let mat = mat.clone();
+        use_effect_with_deps(
+            move |new_mat| {
+                let document = gloo_utils::document();
+                mat.set(new_mat.clone());
+
+                nodes.set(
+                    new_mat
+                        .iter()
+                        .map(|v| {
+                            v.iter()
+                                .map(|x| {
+                                    let node = document.create_element("span").unwrap();
+                                    node.set_inner_html(&format!("{}", x));
+                                    node
+                                })
+                                .collect()
+                        })
+                        .collect(),
+                );
+            },
+            props.mat.clone(),
+        );
+    }
 
     {
         let key = key.clone();
@@ -147,22 +169,36 @@ where
 
                         let mut mat_cloned = (*mat).clone();
 
-                        if let Ok(digit) = key.parse::<i64>() {
-                            mat_cloned[i][j] = mat[i][j]
-                                * T::from_f64(10.).expect("convert from f64")
-                                + T::from_i64(digit).expect("convert from i64");
-                        } else if key == "Backspace" {
-                            mat_cloned[i][j] = T::from_u64(
-                                T::to_u64(
-                                    &(mat[i][j] / T::from_f64(10.).expect("convert from f64")),
+                        match key.as_str() {
+                            "Backspace" => {
+                                mat_cloned[i][j] = T::from_u64(
+                                    T::to_u64(
+                                        &(mat[i][j] / T::from_f64(10.).expect("convert from f64")),
+                                    )
+                                    .expect("convert to u64"),
                                 )
-                                .expect("convert to u64"),
-                            )
-                            .expect("convert from u64");
-                        }
+                                .expect("convert from u64");
+                            }
+                            // direction @ ("ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight") => {
+                            //     let (ni, nj) = match direction {
+                            //         "ArrowUp" => (i, j - 1),
+                            //         "ArrowDown" => (i, j + 1),
+                            //         "ArrowLeft" => (i - 1, j),
+                            //         "ArrowRight" => (i + 1, j),
+                            //         _ => (i, j),
+                            //     };
 
-                        mat.set(mat_cloned.clone());
-                        onchange.emit(mat_cloned);
+                            // }
+                            key => {
+                                if let Ok(digit) = key.parse::<i64>() {
+                                    mat_cloned[i][j] = mat[i][j]
+                                        * T::from_f64(10.).expect("convert from f64")
+                                        + T::from_i64(digit).expect("convert from i64");
+                                    mat.set(mat_cloned.clone());
+                                    onchange.emit(mat_cloned);
+                                }
+                            }
+                        }
                     };
                 }
                 key.set(None);
@@ -177,7 +213,7 @@ where
         let rparen_ref = rparen_ref.clone();
 
         use_effect_with_deps(
-            move |(matrix_ref, _, _)| {
+            move |(matrix_ref, _)| {
                 let element: Element = matrix_ref
                     .clone()
                     .get()
@@ -203,7 +239,7 @@ where
                     .set_attribute("style", &format!("transform: scale(1.2, {scale})"))
                     .expect("set scale attribute");
             },
-            (matrix_ref, props.m, props.n),
+            (matrix_ref, props.mat.shape()),
         )
     }
 
@@ -212,9 +248,9 @@ where
             <span class="paren" ref={lparen_ref}>{"("}</span>
             <table class="matrix" ref={matrix_ref} {onclick}>
                 <tbody>
-                    {for (*mat).iter().take(props.m).enumerate().map(|(i, v)| html! {
+                    {for (*mat).iter().enumerate().map(|(i, v)| html! {
                         <tr>
-                            {for {v.iter().take(props.n).enumerate().map(|(j, v)| html! {
+                            {for {v.iter().enumerate().map(|(j, v)| html! {
                                 <td>
                                     <span i={i.to_string()} j={j.to_string()}>{v}</span>
                                 </td>

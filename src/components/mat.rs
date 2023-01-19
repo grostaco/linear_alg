@@ -8,19 +8,14 @@ use yew::{function_component, html, use_effect_with_deps, use_node_ref, Html, Pr
 use crate::math::Mat2d;
 
 #[derive(Properties, PartialEq)]
-pub struct Props<T, const M: usize, const N: usize>
+pub struct Props<T>
 where
     T: PartialEq + identities::Zero + Copy,
 {
-    #[prop_or(Mat2d::zeros())]
-    pub mat: Mat2d<T, M, N>,
-    #[prop_or(M)]
-    pub m: usize,
-    #[prop_or(N)]
-    pub n: usize,
+    pub mat: Mat2d<T>,
 }
 #[function_component(Mat)]
-pub fn mat<T, const M: usize, const N: usize>(props: &Props<T, M, N>) -> Html
+pub fn mat<T>(props: &Props<T>) -> Html
 where
     T: Float + Display + 'static + FromPrimitive + ToPrimitive,
 {
@@ -34,7 +29,7 @@ where
         let rparen_ref = rparen_ref.clone();
 
         use_effect_with_deps(
-            move |(matrix_ref, _, _)| {
+            move |(matrix_ref, _)| {
                 let element: Element = matrix_ref
                     .clone()
                     .get()
@@ -60,7 +55,7 @@ where
                     .set_attribute("style", &format!("transform: scale(1.2, {scale})"))
                     .expect("set scale attribute");
             },
-            (matrix_ref, props.m, props.n),
+            (matrix_ref, props.mat.shape()),
         )
     }
 
@@ -69,9 +64,9 @@ where
             <span class="paren" ref={lparen_ref}>{"("}</span>
             <table class="matrix" ref={matrix_ref}>
                 <tbody>
-                    {for props.mat.iter().take(props.m).enumerate().map(|(i, v)| html! {
+                    {for props.mat.iter().enumerate().map(|(i, v)| html! {
                         <tr>
-                            {for {v.iter().take(props.n).enumerate().map(|(j, v)| html! {
+                            {for {v.iter().enumerate().map(|(j, v)| html! {
                                 <td>
                                     <span i={i.to_string()} j={j.to_string()}>{v}</span>
                                 </td>

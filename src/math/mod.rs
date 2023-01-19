@@ -1,5 +1,5 @@
 pub mod gauss;
-mod mat;
+pub mod mat;
 pub mod vec;
 
 pub use gauss::GaussElimIter;

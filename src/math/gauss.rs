@@ -16,49 +16,32 @@ pub enum Step<T> {
     Sub { scale: T, from: usize, to: usize },
 }
 
-pub struct GaussElimIter<T, const M: usize, const N: usize> {
-    mat: Mat2d<T, M, N>,
+pub struct GaussElimIter<T> {
+    mat: Mat2d<T>,
     col: usize,
     row: usize,
-    m: usize,
-    n: usize,
 }
 
-impl<T, const M: usize, const N: usize> GaussElimIter<T, M, N> {
-    pub fn bound(&mut self, m: usize, n: usize) {
-        self.m = m;
-        self.n = n;
-    }
-}
-
-impl<T, const M: usize, const N: usize> From<Mat2d<T, M, N>> for GaussElimIter<T, M, N> {
-    fn from(mat: Mat2d<T, M, N>) -> Self {
+impl<T> From<Mat2d<T>> for GaussElimIter<T> {
+    fn from(mat: Mat2d<T>) -> Self {
         Self {
             mat,
             col: 0,
             row: 1,
-            m: M,
-            n: N,
         }
     }
 }
 
-impl<T, const M: usize, const N: usize> Iterator for GaussElimIter<T, M, N>
+impl<T> Iterator for GaussElimIter<T>
 where
-    T: identities::Zero
-        + PartialEq
-        + Div<T, Output = T>
-        + Mul<T, Output = T>
-        + Sub<T, Output = T>
-        + Copy,
+    T: identities::Zero + PartialEq + Div<Output = T> + Mul<Output = T> + Sub<Output = T> + Copy,
 {
-    type Item = (Step<T>, Mat2d<T, M, N>);
+    type Item = (Step<T>, Mat2d<T>);
     fn next(&mut self) -> Option<Self::Item> {
-        let m = M.min(self.m);
-        let n = N.min(self.n);
+        let (m, n) = self.mat.shape();
 
         loop {
-            if self.col == m.min(n) || self.row >= m.min(n) {
+            if self.col >= m || self.row >= n {
                 return None;
             }
 
@@ -79,7 +62,7 @@ where
             }
 
             loop {
-                if self.mat[self.row][self.col] != T::zero() {
+                if self.mat[self.col][self.row] != T::zero() {
                     let scale = self.mat[self.row][self.col] / self.mat[self.col][self.col];
                     self.mat[self.row] = self.mat[self.row].sub(&self.mat[self.col].mul(scale));
                     return Some((
