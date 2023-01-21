@@ -5,7 +5,7 @@ use wasm_bindgen::JsCast;
 use web_sys::{Element, HtmlElement};
 use yew::{function_component, html, use_effect_with_deps, use_node_ref, Html, Properties};
 
-use crate::math::Mat2d;
+use linear_alg::math::Mat2d;
 
 #[derive(Properties, PartialEq)]
 pub struct Props<T>

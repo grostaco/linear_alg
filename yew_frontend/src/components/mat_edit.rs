@@ -9,7 +9,7 @@ use yew::{
 };
 use yew_hooks::use_effect_once;
 
-use crate::math::Mat2d;
+use linear_alg::math::Mat2d;
 
 #[derive(Properties, PartialEq)]
 pub struct Props<T>

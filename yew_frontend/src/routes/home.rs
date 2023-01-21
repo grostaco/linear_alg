@@ -1,9 +1,7 @@
 use yew::prelude::*;
 
-use crate::{
-    components::{DimensionInput, MatEdit, Nav, Steps},
-    math::Mat2d,
-};
+use crate::components::{DimensionInput, MatEdit, Nav, Steps};
+use linear_alg::math::Mat2d;
 
 #[function_component(Home)]
 pub fn home() -> Html {

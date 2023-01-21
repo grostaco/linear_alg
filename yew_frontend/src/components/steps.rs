@@ -3,10 +3,8 @@ use std::fmt::{Debug, Display};
 use num_traits::{Float, FromPrimitive};
 use yew::{function_component, html, virtual_dom::VNode, Html, Properties};
 
-use crate::{
-    components::Mat,
-    math::{mat::Step, Mat2d},
-};
+use crate::components::Mat;
+use linear_alg::math::{mat::Step, Mat2d};
 
 #[derive(Properties, PartialEq)]
 pub struct Props<T>
